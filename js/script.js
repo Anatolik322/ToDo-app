@@ -34,7 +34,8 @@ const deleteTodo =function(){
 };
 
 if( location.reload){
-    for(let todo of JSON.parse( localStorage.getItem('toDosArr'))){
+    let jsonArr=localStorage.getItem('toDosArr');
+    for(let todo of JSON.parse(jsonArr)){
          todosArea.innerHTML+=todo;
     }
  }
