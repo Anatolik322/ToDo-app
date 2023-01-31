@@ -10,15 +10,18 @@ import './index.css'
 const App = () => {
     const data = [{
         label: 'Text 1',
-        important: true
+        important: true,
+        id: 'fesfd'
     },
     {
         label: 'Text 2',
-        important: false
+        important: false,
+        id: 'f3esffd'
     },
     {
         label: 'Text 3',
-        important: false
+        important: false,
+        id: 'fesefwwd'
     }];
     return (
         <div className='app'>

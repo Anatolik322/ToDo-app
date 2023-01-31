@@ -1,10 +1,11 @@
 import React from "react";
 import PostListItem from "../post-list-item";
 import "./post-list.css"
+
 const PostList = ({posts}) => {
     const elements = posts.map(item => {
         return(
-            <li className="list-group-item">
+            <li key={item.id} className="list-group-item">
                 <PostListItem
                 {...item} />
             </li>
@@ -18,3 +19,6 @@ const PostList = ({posts}) => {
 }
 
 export default PostList;
+
+
+
