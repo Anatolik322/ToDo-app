@@ -20,17 +20,22 @@
 .app-list-item .btn-trash {
     color: red;
 }
-.app-list-item .fa-heart {
-    width: 35px;
-    height: 35px;
-    text-align: center;
-    line-height: 35px;
-    font-size: 16px;
-    color: red;
-    transition: 0.3s all;
-    transform: translateX(30px);
-    opacity: 0;
+
+i.fa-heart::before{
+  
+  color: #fff;
+  background-color: #fff;
 }
+.app-list-item .fa-heart {
+  margin: 0 auto;
+  
+  width: 40px;
+  height: 40px;
+  color: red;
+  opacity: 0;
+}
+
+
 
 .app-list-item-label {
   display: block;
@@ -52,3 +57,5 @@
 .app-list-item.important .btn-star {
     color: #aeaeae;
 }
+
+
