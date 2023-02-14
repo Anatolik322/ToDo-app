@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import AppHeader from '../app-header';
 import PostList from '../post-list';
@@ -9,107 +9,84 @@ import PostAddForm from '../post-add-form';
 import './app.css'
 import './index.css'
 
-export default class App extends Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            data: [
-            {
-                label: 'lorem',
-                important: true,
-                like: false,
-                id: 'fefs'
-            },
-            {
-                label: 'buy table',
-                important: false,
-                like: false,
-                id: 'sssf'
-            },
-            {
-                label: 'send my profile',
-                important: false,
-                like: false,
-                id: 'efsfe'
-            }
-            ],
-            term: '',
-            filter: 'all'
-        };
-
-        this.deleteItem = this.deleteItem.bind(this);
-        this.onToggleImportant = this.onToggleImportant.bind(this);
-        this.onToggleLike = this.onToggleLike.bind(this);
-        this.onAdd = this.onAdd.bind(this);
-        this.onFilter = this.onFilter.bind(this);
-        this.searchPost = this.searchPost.bind(this);
-        this.onFormChange = this.onFormChange.bind(this);
-        this.onFilterSelect = this.onFilterSelect.bind(this);
+export default function  App (){
+   
+        
+    const [data, setData] = useState(
+    [{
+        label: 'Купити хліба',
+        important: false,
+        like: false,
+        id: 'f1'
+    },
+    {
+        label: 'Купити стіл',
+        important: false,
+        like: false,
+        id: 'ss3sf'
+    },
+    {
+        label: 'Надіслати резюме',
+        important: false,
+        like: false,
+        id: 'e5fsfe'
+    }
+    ])
+    const [term, setTerm] = useState('');
+    const [filter, setFilter] = useState('all');
+    
+    
+    const deleteItem = id => {
+        
+        const index = data.findIndex(item => item.id = id);
+        setData(data.filter((_ , i) => i !== index))      
     }
 
-    deleteItem(id){
-        this.setState(({data}) =>{
-            const index = data.findIndex(item => item.id = id);
-            const newArr = [...data.slice(0, index),  ...data.slice(index+1)];
-            
-            return{
-                data : newArr
-                }
-            
-        });    
-    }
-
-    onAdd(body){
+    const onAdd = body => {
         const newItem = {
-            label: body,
+            label: body + '',
             important: false,
             like: false,
             id: uuidv4()
         }
-        this.setState(({data}) => {
-            const newArr = [...data, newItem];
-            return{
-                data: newArr
-            }
-        })
+
+        if(newItem.label.length > 22){
+            newItem.label = newItem.label.slice(0, 22) + '...';
+        }
+
+        const newArr = [...data, newItem];
+        setData(newArr);
     }
 
-    onToggleImportant(id){
-        console.log(`Important ${id}`);
-        this.setState(({data}) => {
-            const index = data.findIndex(elem => elem.id === id );
-            const old = data[index];
-            const newItem = {...old, important: !old.important};
-            const newArr = [...data.slice(0, index), newItem, ...data.slice(index + 1)];
-            return{
-                data: newArr
-            }
-        })
+    const onToggleImportant = id => {
+
+        const index = data.findIndex(elem => elem.id === id );
+        const old = data[index];
+        const newItem = {...old, important: !old.important};
+        const newArr = [...data.slice(0, index), newItem, ...data.slice(index + 1)];
+        setData(newArr);
     };
 
-    onToggleLike(id){
-        console.log(`Liked ${id}`);
-        this.setState(() => {
-            const index = this.state.data.findIndex(elem => elem.id === id );
-            const old = this.state.data[index];
-            const newItem = {...old, like: !old.like};
-            const newArr = [...this.state.data.slice(0, index), newItem, ...this.state.data.slice(index + 1)];
-            
-            return{
-                data: newArr
-            }
-            
-        })
+    const onToggleLike = id => {
+        
+        const index = data.findIndex(elem => elem.id === id );
+        const old = data[index];
+        const newItem = {...old, like: !old.like};
+        const newArr = [...data.slice(0, index), newItem, ...data.slice(index + 1)];
+        setData(newArr);
     }
     
-    onFilter(items, filter){
+    const onFilter = (items, filter) => {
+
         if(filter === 'like'){
             return items.filter(item => item.like);
         }else{
             return items;
         }
     }
-    searchPost(posts, term){
+
+    const searchPost = (posts, term) => {
+
         if(term.length === 0){
             return posts;
         }
@@ -119,46 +96,42 @@ export default class App extends Component {
         });
     }
 
-    onFormChange(term){
-        this.setState({term})
-    }
+    const onnFormChange = term => {
+        setTerm(term + '');
+    };
 
-    onFilterSelect(filter){
-        this.setState({filter: filter})
+    const onFilterSelect = filter => {
+        setFilter(filter);
     }
     
+    const liked = data.filter(item => item.like).length;
+    const allElements = data.length;
+    const visiblePosts = onFilter(searchPost(data, term), filter);
 
-    render(){
-        const {data, term, filter} = this.state;
-        const liked = data.filter(item => item.like).length;
-        const allElements = data.length;
-        const visiblePosts = this.onFilter(this.searchPost(data, term), filter);
-
-        return (
-            <div className='app'>
-                <AppHeader
-                liked = {liked}
-                allElements = {allElements}
-                
-                />,
-                <div className='search-panel d-flex'>
-                    <SearchPanel
-                        onFormChange = {this.onFormChange}
-                     />
-                    <PostStatusFilter
-                     onFilterSelect = {this.onFilterSelect}
-                     />
-                </div>
-                <PostList
-                 posts={visiblePosts}
-                 deleteEvent = {this.deleteItem}
-                 onToggleLike = {this.onToggleLike}
-                 onToggleImportant = {this.onToggleImportant}   />
-                <PostAddForm
-                 onAdd = {this.onAdd} />
+    return (
+        <div className='app'>
+            <AppHeader
+            liked = {liked}
+            allElements = {allElements}
+            
+            />,
+            <div className='search-panel d-flex'>
+                <SearchPanel
+                    onFormChange = {onnFormChange}
+                 />
+                <PostStatusFilter
+                 onFilterSelect = {onFilterSelect}
+                 />
             </div>
-        )
-    }
+            <PostList
+             posts={visiblePosts}
+             deleteEvent = {deleteItem}
+             onToggleLike = {onToggleLike}
+             onToggleImportant = {onToggleImportant}   />
+            <PostAddForm
+             onAdd = {onAdd} />
+        </div>
+    )  
 }
 
 
